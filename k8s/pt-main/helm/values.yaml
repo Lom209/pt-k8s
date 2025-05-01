@@ -1,0 +1,47 @@
+# Default values for pt-main Helm chart
+
+# Deployment configuration
+
+# Image configuration
+image:
+  repository: lomeow/pt-main
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# Security context for the container
+securityContext:
+  capabilities:
+    add:
+      - NET_ADMIN
+      - NET_RAW
+      - SYS_ADMIN
+  privileged: true
+
+# Resource requests and limits
+resources:
+  requests:
+    memory: 512Mi
+    cpu: 500m
+  limits:
+    memory: 2Gi
+    cpu: 2
+
+# Service configuration
+service:
+  type: NodePort
+  ports:
+    - name: ssh
+      port: 22
+      targetPort: 22
+      nodePort: 30022
+    - name: socks-proxy
+      port: 1080
+      targetPort: 1080
+      nodePort: 31080
+
+# Storage configuration
+persistence:
+  enabled: true
+  dataMountPath: /home/main/data
+  dataHostPath: /tmp/pt-main-data
+  tunDevicePath: /dev/net/tun

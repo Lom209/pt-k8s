@@ -1,0 +1,94 @@
+kube-prometheus-stack:
+  grafana:
+    enabled: true
+    adminPassword: "ptk8sadmin"
+    persistence:
+      enabled: true
+      size: 10Gi
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+        - name: 'pt-k8s'
+          orgId: 1
+          folder: 'PT-K8s'
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /var/lib/grafana/dashboards/pt-k8s
+            allowUiUpdates: true
+    additionalDataSources:
+      - name: loki
+        type: loki
+        url: http://{{ .Release.Name }}-loki:3100
+        access: proxy
+        isDefault: false
+        jsonData:
+          maxLines: 5000
+
+  prometheus:
+    prometheusSpec:
+      serviceMonitorSelector: {}
+      serviceMonitorNamespaceSelector: {}
+      serviceMonitorSelectorNilUsesHelmValues: false
+      podMonitorSelector: {}
+      podMonitorNamespaceSelector: {}
+      podMonitorSelectorNilUsesHelmValues: false
+      retention: 10d
+      resources:
+        requests:
+          memory: 256Mi
+          cpu: 100m
+        limits:
+          memory: 512Mi
+          cpu: 200m
+
+  alertmanager:
+    enabled: true
+    alertmanagerSpec:
+      storage:
+        volumeClaimTemplate:
+          spec:
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 10Gi
+
+  kubeStateMetrics:
+    enabled: true
+
+  nodeExporter:
+    enabled: true
+
+  prometheusOperator:
+    enabled: true
+    admissionWebhooks:
+      enabled: true
+      patch:
+        enabled: true
+
+loki:
+  enabled: true
+  persistence:
+    enabled: true
+    size: 10Gi
+  serviceMonitor:
+    enabled: true
+  # Configuration for single-node clusters
+  singleBinary:
+    replicas: 1
+  backend:
+    replicas: 1
+  read:
+    replicas: 1
+  write:
+    replicas: 1 
+  gateway:
+    replicas: 1
+    affinity: null  # Disable default anti-affinity
+
+promtail:
+  enabled: true
+  config:
+    lokiAddress: http://{{ .Release.Name }}-loki:3100/loki/api/v1/push
