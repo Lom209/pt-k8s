@@ -52,7 +52,7 @@ fi
 
 # Path to project root directory
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-DOCKER_DIR="${PROJECT_ROOT}/../pt-main/docker"
+DOCKER_DIR="${PROJECT_ROOT}/../../pt-main/docker"
 HELM_CHART_DIR="${PROJECT_ROOT}/helm"
 KUBE_CONFIG="${PROJECT_ROOT}/../k8s/k3s.kubeconfig"
 

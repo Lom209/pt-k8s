@@ -32,7 +32,6 @@ The project includes:
 - **pt-main**: A containerised Kali Linux environment with pre-configured security tools
 - **Monitoring stack**: Prometheus, Grafana, Loki, and Promtail for comprehensive monitoring and log aggregation
 - **Kubernetes configurations & deployment scripts**: Application / Infrastructure management (from deploy -> maintenance) 
-- **KSAK (Kubernetes Swiss Army Knife)**: A CLI tool for managing Kubernetes resources and interacting with pods
 
 This platform enables security professionals to:
 - Deploy isolated, scalable, containerised penetration testing environments with minimal intervention.
@@ -71,9 +70,9 @@ For simplicity - only the pt-main pod is displayed within the K3s cluster.
 ┌─────────────────────────────────────────────────────────────┐
 │                  Local Development Machine                  |
 |                                                             |
-│        ┌───────────────────────┐   ┌───────────────┐        │
-│        │ kubectl / k9s / ksak  │   │  Helm / Bash  │        │
-│        └───────────────────────┘   └───────────────┘        │
+│          ┌────────────────────┐    ┌───────────────┐        │
+│          │   kubectl / k9s    │    │  Helm / Bash  │        │
+│          └────────────────────┘    └───────────────┘        │
 │                    |                       |                │
 │                    │                       │                │
 └────────────────────┼───────────────────────┼────────────────┘
@@ -141,13 +140,6 @@ pt-k8s/
 │       │       └── service.yaml                # Service template
 │       └── scripts/                    # Deployment scripts
 │           └── deploy-pt-main.sh           # Script to deploy pt-main with Helm
-├── ksak/                          # Kubernetes Swiss Army Knife tool
-│   ├── k3s.kubeconfig              # Configuration for KSAK
-│   ├── ksak.py                     # Main KSAK application
-│   ├── README.md                   # KSAK documentation
-│   └── functions/                  # KSAK modules
-│       ├── file_retriever.py           # Pod file system navigation
-│       ├── port_forward.py             # Service port forwarding
 ├── pt-main/                       # Containerised penetration testing environment
 │   ├── README.md                   # pt-main documentation
 │   ├── docker/                     # Docker configuration

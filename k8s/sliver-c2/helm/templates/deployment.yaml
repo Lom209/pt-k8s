@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: {{ .Release.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        securityContext:
+          capabilities:
+            add: {{ toJson .Values.securityContext.capabilities.add }}
+          privileged: {{ .Values.securityContext.privileged }}
+        ports:
+        {{- range .Values.service.ports }}
+        - containerPort: {{ .targetPort }}
+          name: {{ .name }}
+          {{- if .protocol }}
+          protocol: {{ .protocol }}
+          {{- end }}
+        {{- end }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        volumeMounts:
+        - name: {{ .Release.Name }}-data
+          mountPath: {{ .Values.persistence.dataMountPath }}
+      volumes:
+      - name: {{ .Release.Name }}-data
+        hostPath:
+          path: {{ .Values.persistence.dataHostPath }}
+          type: DirectoryOrCreate

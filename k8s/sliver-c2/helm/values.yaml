@@ -1,0 +1,55 @@
+# Default values for sliver-c2 Helm chart
+
+# Deployment configuration
+replicaCount: 1
+
+# Image configuration
+image:
+  repository: lomeow/sliver-c2
+  tag: latest
+  pullPolicy: Always
+
+# Security context for the container
+securityContext:
+  capabilities:
+    add:
+      - NET_ADMIN
+      - NET_RAW
+  privileged: true
+
+# Resource requests and limits
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 250m
+  limits:
+    memory: 1Gi
+    cpu: 1
+
+# Service configuration
+service:
+  type: NodePort
+  ports:
+    - name: https
+      port: 443
+      targetPort: 443
+      nodePort: 30443
+    - name: http
+      port: 80
+      targetPort: 80
+      nodePort: 30080
+    - name: mtls
+      port: 31337
+      targetPort: 31337
+      nodePort: 31337
+    - name: dns
+      port: 53
+      targetPort: 53
+      protocol: UDP
+      nodePort: 30053
+
+# Storage configuration
+persistence:
+  enabled: true
+  dataMountPath: /data
+  dataHostPath: /tmp/sliver-c2-data

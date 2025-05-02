@@ -60,13 +60,14 @@ alias scripts="cd /home/'${USERNAME}'/scripts"\n\
 alias ptcmd="python3 /home/'${USERNAME}'/scripts/pt-commands.py"\n\
 alias start-proxy="sudo /home/'${USERNAME}'/scripts/proxy-startup.sh"\n\
 alias start-vpn="sudo -b openvpn --config /home/'${USERNAME}'/vpn/htb.ovpn"\n\
+alias sliver-connect="/home/'${USERNAME}'/scripts/connect-sliver.sh"\n\
 ' >> /home/${USERNAME}/.bashrc && \
     chown ${USERNAME}:${USERNAME} /home/${USERNAME}/.bashrc
 
 # Copy files from the host into the container
 COPY vpn/* /home/${USERNAME}/vpn/
 COPY scripts/* /home/${USERNAME}/scripts/
-RUN chmod +x /home/${USERNAME}/scripts/proxy-startup.sh && \
+RUN chmod +x /home/${USERNAME}/scripts/*.sh && \
     chown -R ${USERNAME}:${USERNAME} /home/${USERNAME}
 
 # Switch to non-root user
